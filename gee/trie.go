@@ -46,18 +46,22 @@ func (n *node) insert(pattern string, parts []string, height int) {
 }
 
 func (n *node) search(parts []string, height int) *node {
-	if len(parts) == height || strings.HasPrefix(parts[height], "*") {
-		if n.pattern != "" {
+	if len(parts) == height || strings.HasPrefix(n.part, "*") {
+		if n.pattern == "" {
 			return nil
 		}
 		return n
 	}
 
 	part := parts[height]
-	chiild := n.matchChild(part)
-	if chiild == nil {
-		return nil
-	}
-	return chiild.search(parts, height+1)
+	children := n.matchChildren(part)
 
+	for _, child := range children {
+		result := child.search(parts, height+1)
+		if result != nil {
+			return result
+		}
+	}
+
+	return nil
 }
