@@ -1,7 +1,6 @@
 package gee
 
 import (
-	"log"
 	"net/http"
 	"strings"
 )
@@ -24,7 +23,6 @@ func newRouter() *router {
 }
 
 func (r *router) addRoute(method string, pattern string, handler HandlerFunc) {
-	log.Printf("adding route %s %s", method, pattern)
 	parts := parsePattern(pattern)
 	key := method + "-" + pattern
 
