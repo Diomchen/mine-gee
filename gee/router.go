@@ -72,6 +72,8 @@ func (r *router) handle(c *Context) {
 	} else {
 		c.String(http.StatusNotFound, "404 page not found")
 	}
+
+	c.Next()
 }
 
 func parsePattern(pattern string) []string {
