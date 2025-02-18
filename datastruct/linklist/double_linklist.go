@@ -11,79 +11,115 @@ type Node struct {
 	data interface{}
 }
 
-func NewDoubleLinkList(data interface{}) *Node {
-	return &Node{nil, nil, data}
+type LinkedList struct {
+	head *Node
+	tail *Node
+	size int
+}
+
+func NewDoubleLinkList() *LinkedList {
+	return &LinkedList{}
 }
 
 // 在最前面插入数值
-func (n *Node) InsertHead(data interface{}) error {
-	if n.prev != nil {
-		return errors.New("Current node is not the head of the list.")
+func (l *LinkedList) InsertHead(data interface{}) error {
+	newNode := &Node{nil, l.head, data}
+	if l.head != nil {
+		l.head.prev = newNode
+	} else {
+		l.tail = newNode
 	}
-	newNode := &Node{nil, n, data}
-	n.prev = newNode
+	l.head = newNode
+	l.size++
 	return nil
 }
 
 // 在最后面插入数值
-func (n *Node) InsertTail(data interface{}) error {
-	for {
-		if n.next == nil {
-			break
-		}
-		n = n.next
+func (l *LinkedList) InsertTail(data interface{}) error {
+	newNode := &Node{l.tail, nil, data}
+	if l.tail != nil {
+		l.tail.next = newNode
+	} else {
+		l.head = newNode
 	}
-
-	newNode := &Node{n, nil, data}
-	n.next = newNode
+	l.tail = newNode
+	l.size++
 	return nil
 }
 
 // 取出最前面数值
-func (n *Node) PopHead() (*Node, error) {
-	if n == nil {
+func (l *LinkedList) PopHead() (*Node, error) {
+	if l.head == nil {
 		return nil, errors.New("List is empty.")
 	}
-	if n.prev == nil {
-		popNode := n
-		n = n.next
-		n.prev = nil
-		popNode.next = nil
-		return popNode, nil
+	popNode := l.head
+	l.head = l.head.next
+	if l.head != nil {
+		l.head.prev = nil
+	} else {
+		l.tail = nil
 	}
-	return nil, nil
-}
-
-// 取出最后面数值
-func (n *Node) PopTail() (*Node, error) {
-	if n == nil {
-		return nil, errors.New("List is empty.")
-	}
-	for {
-		if n.next == nil {
-			break
-		}
-		n = n.next
-	}
-
-	popNode := n
-	n = n.prev
-	n.next = nil
-	popNode.prev = nil
+	l.size--
 	return popNode, nil
 }
 
-func (n *Node) Print() {
-	if n == nil {
+// 取出最后面数值
+func (l *LinkedList) PopTail() (*Node, error) {
+	if l.tail == nil {
+		return nil, errors.New("List is empty.")
+	}
+	popNode := l.tail
+	l.tail = l.tail.prev
+	if l.tail != nil {
+		l.tail.next = nil
+	} else {
+		l.head = nil
+	}
+	l.size--
+	return popNode, nil
+}
+
+func (l *LinkedList) Print() {
+	if l.head == nil {
 		fmt.Println("List is empty.")
 		return
 	}
-	for {
-		if n.next == nil {
+
+	next := l.head
+	fmt.Println()
+	for next != nil {
+		fmt.Printf("%v ", next.data)
+		next = next.next
+	}
+	fmt.Printf("\n double linklist size is %v", l.size)
+}
+
+func (l *LinkedList) Size() int {
+	return l.size
+}
+
+func (l *LinkedList) IsEmpty() bool {
+	return l.size == 0
+}
+
+func (l *LinkedList) Clear() {
+	l.head = nil
+	l.tail = nil
+	l.size = 0
+}
+
+func (l *LinkedList) GetNode(index int) (*Node, error) {
+	if index < 0 || index >= l.size {
+		return nil, errors.New("Index out of range.")
+	}
+	counter := 0
+	next := l.head
+	for next != nil {
+		if counter == index {
 			break
 		}
-		fmt.Printf("%v ", n.data)
-		n = n.next
+		next = next.next
+		counter++
 	}
-	fmt.Printf("%v\n", n.data)
+	return next, nil
 }
