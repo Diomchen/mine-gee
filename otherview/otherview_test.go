@@ -35,3 +35,13 @@ func TestX002(t *testing.T) {
 	wg.Wait()
 
 }
+
+func TestX003(t *testing.T) {
+	PrintAlternate()
+}
+
+func TestX004(t *testing.T) {
+	assert.Equal(t, true, JudgeDiffStr("asd"))
+	assert.Equal(t, false, JudgeDiffStr("asdd"))
+
+}
