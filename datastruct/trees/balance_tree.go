@@ -76,5 +76,24 @@ func (bbt *BinaryBalanceTree) insert(node *Node, value T) *Node {
 
 	node.UpdateHeight()
 
+	balance := node.GetBalanceFactor()
+	if balance > 1 && value < node.Left.Value {
+		return RightRotate(node)
+	}
+
+	if balance < -1 && value > node.Right.Value {
+		return LeftRotate(node)
+	}
+
+	if balance > 1 && value > node.Left.Value {
+		node.Left = LeftRotate(node.Left)
+		return RightRotate(node)
+	}
+
+	if balance < -1 && value < node.Right.Value {
+		node.Right = RightRotate(node.Right)
+		return LeftRotate(node)
+	}
+
 	return node
 }
