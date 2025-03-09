@@ -83,7 +83,9 @@ func TestX005(t *testing.T) {
 			}
 		}(i)
 	}
-	queue.Close()
 
 	wg.Wait()
+
+	queue.Close()
+
 }
